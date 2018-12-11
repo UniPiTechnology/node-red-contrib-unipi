@@ -1,0 +1,154 @@
+<script type="text/javascript">
+    RED.nodes.registerType('unipi-input', {
+        category: 'UniPi',
+        color: '#ffffff',
+        defaults: {
+            name: { value: "" },
+            alias: { value: "" },
+            devices: { value: "input", required: true },
+            circuits: { value: "1.01", required: true },
+            property: { value: "" },
+            seedev: { value: "0", required: true},
+            seecirc: { value: "0", required: true},
+            seeorig: { value: "0", required: true}
+
+        },
+        align: 'right',
+        inputs: 1,
+        outputs: 1,
+        icon: "unipi_logo.png",
+        label: function () {
+            return this.name || "UniPi Input";
+        },
+        
+    });
+
+
+    function check() {
+            if (document.getElementById("node-input-alias").value.length > 0) {
+                document.getElementById("node-input-devices").disabled = true;
+                document.getElementById("node-input-circuits").disabled = true;
+            }
+        }
+    function enable() {
+        if (document.getElementById("node-input-alias").value.length == 1) {
+            document.getElementById("node-input-devices").disabled = false;
+            document.getElementById("node-input-circuits").disabled = false;
+        }
+    }
+    function disable() {
+        if (document.getElementById("node-input-alias").value.length > 0) {
+            document.getElementById("node-input-devices").disabled = true;
+            document.getElementById("node-input-circuits").disabled = true;
+        }
+    }
+
+
+
+
+</script>
+
+<script type="text/x-red" data-template-name="unipi-input">
+
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-alias"><i class="fa fa-user-circle-o"></i> Alias</label>
+        <input type="text" id="node-input-alias" placeholder="Write an Alias" onchange="check()" onkeyup="disable()" onkeydown="enable()" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-devices"><i class="fa fa-microchip"></i> Devices</label>
+        <select type="text" id="node-input-devices">
+            <option value="input">Input</option>
+            <option value="relay">Relay</option>
+            <option value="relay_do">Digital output</option>
+			<option value="ai">Analog input</option>
+            <option value="ao">Analog output</option>
+            <option value="led">Led</option>
+            <option value="temp">Temp</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-circuits"><i class="fa fa-bolt"></i> Circuits</label>
+        <input type="text" id="node-input-circuits" placeholder="Write circuit (e.g. 1.01)">
+    </div>
+    <div class="form-row">
+        <label for="node-input-property"><i class="fa fa-angle-double-right"></i> Property</label>
+        <input type="text" id="node-input-property" placeholder="Select property">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-seedev"><i class="fa fa-list-ul"></i> See devices</label>
+        <select type="text" id="node-input-seedev">
+            <option value="1">True</option>
+            <option value="0">False</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-seecirc"><i class="fa fa-list-ul"></i> See circuits</label>
+        <select type="text" id="node-input-seecirc">
+            <option value="1">True</option>
+            <option value="0">False</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-seeorig"><i class="fa fa-list-ul"></i> See orig msg</label>
+        <select type="text" id="node-input-seeorig">
+            <option value="1">True</option>
+            <option value="0">False</option>
+        </select>
+    </div>
+       
+</script>
+
+<script type="text/x-red" data-help-name="unipi-input">
+    <p><b>UniPi input</b> node is the data filter for Unipi devices.</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt> payload <span class="property-type">string | object</span> </dt>
+        <dd> Set the input payload as an original message from UniPi device (e.g. from Wdebsocket).</dd>
+    </dl>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt> payload <span class="property-type">string | object | number | boolean</span></dt>
+        <dd> The filtred data are shown. </dd>
+    </dl>
+    <h3>Details</h3>
+    <p>The node is primary the filter for the UniPi data.</p>
+    <p></p>
+    <p>For connection of the node with the UniPi device is required to install on the UniPi device the EVOK utility in version 2.0 or higher. See <a href="https://github.com/UniPiTechnology/evok">UniPi GitHub</a> for more information.</p>
+    <p></p>
+    <p>For connection - node and the UniPi device - use the websocket node which is set as <i>connect to</i> on the adress ws://[adress of the UniPi device]/ws.</p>
+    <p></p>
+    <h4><b>Setting the node</b></h4>
+    <p>The node has the following properities to be set:</p>
+    <ul>
+            <li><code>Name</code> - give a name to the node. It will change the label of the node. No other function is connected with the name changing. Set the name for user's better orientation.
+            <p></p>
+            <li><code>Alias</code> - by the UniPi interface one could set an Alias to the specific couple - <i>device + circuit</i>. By setting an <u>Alias</u> there is no need to set the couple <i>device + circuit</i> in the node and this option is automatically disabled.
+            <p></p>
+            <li><code>Devices</code> - set the <i>device</i> as a first part of couple <i>device + circuit</i>. Choose one from the list.
+            <p></p>
+            <li><code>Circuits</code> - the <i>circuit</i> of the device choosen above is written here. Set the circuit as a second part of couple <i>device + circuit</i>. Write e.g. 1.01 for circuit <i>1.01</i>, UART 1 1.01 for circuit <i>UART 1 1.01</i> etc. (or just copy the circuit from <i>UniPi Control Panel</i>)
+            <p></p>
+            <li><code>Property</code> - if no property is written then the whole object (containing relevant <i>device + circuit</i>) is shown in <code>msg.payload</code>. If the existing property is writen then the <code>msg.payload</code> will contain this property and <code>msg.topic</code> will contain written name of chosen property. Try e.g. write value to see the value of <i>analog input, relay </i>etc.
+            <p></p>
+            <li><code>See device</code> - if there is a need to see all devices in the recieved message then set option <i>True</i> from the list and the list of devices will be shown in <code>msg.seedev</code>. Else set option <i>False</i>.
+            <p></p>
+            <li><code>See circuits</code> - if there is a need to see all circuits in the recieved message then set option <i>True</i> from the list and the list of circuits will be shown in <code>msg.seecirc</code>. Else set option <i>False</i>.
+            <p></p>
+            <li><code>See orig msg</code> - if there is a need to see the original msg in the recieved message then set option <i>True</i> from the list and the list of circuits will be shown in <code>msg.orig</code>. Else set option <i>False</i>.
+            <p></p>
+        </ul>
+    <h4><b>Special behaviour</b></h4>
+    <p>Details for field <u>circuits</u> - text input :</p>
+    <ul>
+        <li> input text should be the same as in EVOK. One can just copy the circuit (e.g. 1.01, UART 1 2.01 etc.) and paste. This option is described above.
+        <li> another option is to copy the circuit from the <code>msg</code> (msg from relevant websocket). Circuit here is in form 1_01 for <i>1.01</i>; UART_1_1_01 for <i>UART 1 1.01</i> etc.
+        <li> both options are possible to write in the circuit field. Equivalent entries e.g. 2.01 or 2_01; UART 2 2.08 or UART_2_2_08 etc.
+    </ul>
+
+</script>
