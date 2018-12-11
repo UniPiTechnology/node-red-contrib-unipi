@@ -1,0 +1,321 @@
+<script type="text/javascript">
+    RED.nodes.registerType('unipi-output', {
+        category: 'UniPi',
+        color: '#ffffff',
+        defaults: {
+            name: { value: "" },
+            cmd: { value: "set" },
+            alias: { value: "" },
+            devices: { value: "relay", required: true },
+            circuits: { value: "1.01", required: true },
+            enableFil: { value: "1", required: true },
+            inputFil: { value: "" },
+            relayFil: { value: "" },
+            digoutFil: { value: "" },
+            analoutFil: { value: "" },
+            analinFil: { value: "" },
+            ledFil: { value: "" }
+            },
+        align: 'right',
+        inputs: 1,
+        outputs: 1,
+        icon: "unipi_logo.png",
+        label: function () {
+            return this.name || "UniPi Output";
+        }
+    });
+
+function showFilEnable()
+{
+    $('#node-input-enableFil').show();
+    $('#enableFilLabel').show();
+}
+
+function hideFilEnable()
+{
+    $('#node-input-enableFil').hide();
+    $('#enableFilLabel').hide();
+}
+
+
+function showFil()
+{
+    $('#node-input-inputFil').show();
+    $('#inputFilLabel').show();
+    $('#node-input-relayFil').show();
+    $('#relayFilLabel').show();
+    $('#node-input-digoutFil').show();
+    $('#digoutFilLabel').show();
+    $('#node-input-analoutFil').show();
+    $('#analoutFilLabel').show();
+    $('#node-input-analinFil').show();
+    $('#analinFilLabel').show();
+    $('#node-input-ledFil').show();
+    $('#ledFilLabel').show();
+}
+
+function hideFil()
+{
+    $('#node-input-inputFil').hide();
+    $('#inputFilLabel').hide();
+    $('#node-input-relayFil').hide();
+    $('#relayFilLabel').hide();
+    $('#node-input-digoutFil').hide();
+    $('#digoutFilLabel').hide();
+    $('#node-input-analoutFil').hide();
+    $('#analoutFilLabel').hide();
+    $('#node-input-analinFil').hide();
+    $('#analinFilLabel').hide();
+    $('#node-input-ledFil').hide();
+    $('#ledFilLabel').hide();
+}
+
+function showSet()
+{
+    $('#node-input-alias').show();
+    $('#aliasLabel').show();
+    $('#node-input-devices').show();
+    $('#devicesLabel').show();
+    $('#node-input-circuits').show();
+    $('#circuitsLabel').show();
+}
+
+
+function hideSet()
+{
+    $('#node-input-alias').hide();
+    $('#aliasLabel').hide();
+    $('#node-input-devices').hide();
+    $('#devicesLabel').hide();
+    $('#node-input-circuits').hide();
+    $('#circuitsLabel').hide();
+}
+
+function choose() {
+            if (document.getElementById("node-input-cmd").value  == "all") 
+            {
+                hideFil();
+                hideSet();
+                hideFilEnable();
+            
+            }
+            else if(document.getElementById("node-input-cmd").value  == "filter")
+            {
+                showFilEnable();
+                showFil();
+                hideSet();
+            }
+            else if(document.getElementById("node-input-cmd").value  == "set")
+            {
+                    
+                showSet();
+                hideFil();
+                hideFilEnable();
+                
+
+                if(document.getElementById("node-input-alias").value.length > 0) 
+                {
+                    document.getElementById("node-input-devices").disabled = true;
+                    document.getElementById("node-input-circuits").disabled = true;
+                }
+                else
+                {
+                    document.getElementById("node-input-devices").disabled = false;
+                    document.getElementById("node-input-circuits").disabled = false;
+                }
+            }
+        }
+
+
+    function check() {
+            if (document.getElementById("node-input-alias").value.length > 0) 
+            {
+                document.getElementById("node-input-devices").disabled = true;
+                document.getElementById("node-input-circuits").disabled = true;
+            }
+    }
+    function enable() {
+        if (document.getElementById("node-input-alias").value.length == 1)
+        {
+            document.getElementById("node-input-devices").disabled = false;
+            document.getElementById("node-input-circuits").disabled = false;
+        }
+    }
+    function disable() {
+        if (document.getElementById("node-input-alias").value.length > 0) {
+            document.getElementById("node-input-devices").disabled = true;
+            document.getElementById("node-input-circuits").disabled = true;
+        }
+    }
+
+
+
+</script>
+
+<script type="text/x-red" data-template-name="unipi-output">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-cmd"><i class="fa fa-caret-square-o-right"></i> Command</label>
+        <select type="text" id="node-input-cmd" onchange="choose()">
+            <option value="all">All</option>
+            <option value="filter">Filter</option>
+			<option value="set">Set</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-alias" id="aliasLabel"><i class="fa fa-user-circle-o"></i> Alias</label>
+        <input type="text" id="node-input-alias" placeholder="Write an Alias" onchange="check()" onkeyup="disable()" onkeydown="enable()">
+    </div>
+    <div class="form-row">
+        <label for="node-input-devices" id="devicesLabel"><i class="fa fa-microchip"></i> Devices</label>
+        <select type="text" id="node-input-devices">
+            <option value="relay">Relay</option>
+            <option value="relay_do">Digital output</option>
+            <option value="led">Led</option>
+			<option value="ao">Analog output</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-circuits" id="circuitsLabel"><i class="fa fa-bolt"></i> Circuits</label>
+        <input type="text" id="node-input-circuits" placeholder="Write circuit (e.g. 1_01)">
+    </div>
+    <div class="form-row">
+        <label for="node-input-enableFil" id="enableFilLabel"></label>
+        <select type="text" id="node-input-enableFil">
+            <option value="1">Enable filter</option>
+            <option value="0">Disable filter</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-inputFil" id="inputFilLabel">Input</label>
+        <input type="checkbox" id="node-input-inputFil" style="display:inline-block; width:auto; vertical-align:top;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-relayFil" id="relayFilLabel">Relay</label>
+        <input type="checkbox" id="node-input-relayFil" style="display:inline-block; width:auto; vertical-align:top;">
+    </div> 
+    <div class="form-row">
+        <label for="node-input-digoutFil" id="digoutFilLabel">Digital output</label>
+        <input type="checkbox" id="node-input-digoutFil" style="display:inline-block; width:auto; vertical-align:top;">
+    </div> 
+    <div class="form-row">
+        <label for="node-input-analoutFil" id="analoutFilLabel">Analog output</label>
+        <input type="checkbox" id="node-input-analoutFil" style="display:inline-block; width:auto; vertical-align:top;">
+    </div> 
+    <div class="form-row">
+        <label for="node-input-analinFil" id="analinFilLabel">Analog input</label>
+        <input type="checkbox" id="node-input-analinFil" style="display:inline-block; width:auto; vertical-align:top;">
+    </div> 
+    <div class="form-row">
+        <label for="node-input-ledFil" id="ledFilLabel">Led</label>
+        <input type="checkbox" id="node-input-ledFil" style="display:inline-block; width:auto; vertical-align:top;">
+    </div> 
+    
+</script>
+
+<script type="text/x-red" data-help-name="unipi-output">
+    <style type="text/css">
+        h2    {color: blue; font-style: italic;}
+        </style>
+    <p><b>UniPi output</b> is the command node for UniPi devices.</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt> payload <span class="property-type">number | boolean | string</span> </dt>
+        <dd> The payload can be number, boolean or string (as a number or the first character/s of the payload must be number/s).</dd>
+    </dl>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt> payload <span class="property-type">object</span></dt>
+        <dd> The JSON object is created by node. Send this object by the Websocket to the UniPi device.</dd>
+    </dl>
+    <h3>Details</h3>
+    <p></p>
+    <p>For connection of the node with the UniPi device is required to install on the UniPi device the EVOK utility in version 2.0 or higher. See <a href="https://github.com/UniPiTechnology/evok">UniPi GitHub</a> for more information.</p>
+    <p></p>
+    <p>For connection - node and the UniPi device - use the websocket node which is set as <i>connect to</i> on the adress ws://[adress of the UniPi device]/ws.</p>
+    <p></p>
+    <h4><b>Setting the node</b></h4>
+        <p>The node has the following properities to be set:</p>
+    <ul>
+            <li><code>Name</code> - give a name to the node. It will change the label of the node. No other function is connected with the name changing. Set the name for user's better orientation.
+            <p></p>
+            <li><code>Commmand</code> - The command field has three options:
+                <ul>
+                    <p></p>
+                    <li><i style="color:blue"> All</i> - return the message from the UniPi device with all couples <u><i>device + circuit</i></u> from the relevant Websocket.
+                    <p></p>
+                    <li><i style="color:blue">Filter</i> - by using this filter - messages from the UniPi device with filtred couples <u><i>device + circuit</i></u> will be only recieved from the relevant Websocket. 
+                    <p></p>
+                    <li><i style="color:blue">Set</i> - is a setting command which send to the UniPi device chosen couple <u><i>device + circuit</i></u> (<i>device</i> is set in <code>Devices</code> and <i>circuit</i>  is set in <code>Circuits</code> or use an <code>Alias</code> field to access the couple) and its value. Value is set by input <code>msg.payload</code>.
+                    <p></p>
+                </ul>
+
+    </ul>
+    <h2>All</h2>
+    <p>By this command, there is no need to fill any other field. By any input <code>Msg</code> is this command send to the relevant Websocket.</p>
+    <h2>Filter</h2>
+    <p>By any input <code>Msg</code> is this command send to relevant Websocket (the same as above for command All). There are two options:</p>
+    <ul>
+        <li><i>Enable filter</i> - The filter is enabled and check boxes below are active. Checked devices will only be seen after filter command is send (e.g. if there is a filter for analog output then no msg from the relevant Websocket will come for device relay etc.).
+        <li><i>Disable filter</i> - The filter is disabled and chech boxes are non active. 
+    </ul>
+    <h2>Set</h2>
+    <ul>    
+            <li><code>Alias</code> - by the UniPi interface one could set an Alias to the specific couple - <i>device + circuit</i>. By setting an <u>Alias</u> there is no need to set the couple <i>device + circuit</i> in the node and this option is automatically disabled.
+                <p></p>        
+            <li><code>Devices</code> - By the device field one can choose :
+                <ul>
+                    <p></p>
+                    <li><b><i>Relay</i></b> - device relay has two states <u>ON-OFF</u>. Input message should obtain: 1 or 0 as a <i>number</i>, true or false as a <i>boolean</i>, "1" or "0" as a <i>string</i>. (More about "ON-OFF" devices is described in section Special behaviour).
+                    <p></p>
+                    <li><b><i>Digital output</i></b> - device digital output has two states <u>ON-OFF</u>. Input message - the same as above for relay.
+                    <p></p>
+                    <li><b><i>Led</i></b> - device led has two states <u>ON-OFF</u>. Input message - the same as above for relay.
+                    <p></p>
+                    <li><b><i>Analog output</i></b> - device analog output has range <u>0-10V</u>. Input message should obtain: <i>number</i> in range 0-10, <i>string</i> in range "0"-"10". (More about analog output input is described in section Special behaviour)
+                    <p></p>
+                </ul>
+            <li><code>Circuits</code> - the circuit of the device choosen above is written here. Write e.g. 1.01 for circuit <i>1.01</i>, UART 1 1.01 for circuit <i>UART 1 1.01</i> etc. (or just copy the circuit from <i>UniPi Control Panel</i>)
+     </ul>
+    <h4><b>Special behaviour</b></h4>
+    <p>Details for <u>ON-OFF</u> input msg:</p>
+        <ul>
+                <p>If device is <u>ON-OFF</u> type then an expected input msg is described above. More details are described below:</p>
+                <li><b><i>Boolean</i></b> - set true for <u>ON</u> else set false for <u>OFF</u>..
+                <p></p>
+                <li><b><i>Number</i></b> - any number >= 1 (e.g. 1, 1.1, 25, 10051 etc.) returns the <u>ON</u> state (primary use number 1). Any number <= 0 (e.g. -0.1, -1, -25, -10051 etc.) returns the <u>OFF</u> state (primary use number 0). Specially number in interval >=0 & <1 (0-0.9999) returns 0.
+                <p></p>
+                <li><b><i>String</i></b> - general string msg returns no msg. Special forms which can be used are:
+                <p></p>
+                <ul>
+                    <li> write <i>true/false</i> -> string "true/false" acts like a boolean
+                    <li> write <i>1/0</i> -> string "1/0" acts like a number
+                    <li> write <i>ON/OFF</i> -> string "ON/OFF" acts like a boolean
+                    <li> writen number -> string acts like a number
+                    <li> if string starts with numbers -> msg acts like number (e.g. 1.58high -> returns 1; 254,87 - input -> returns 254 and state is <i>ON</i> etc.)
+                </ul>
+        </ul>
+    <p>Details for <u>Analog output</u> input msg:</p>
+    <ul>
+        <p>If device is <u>Analog output</u> type then an expected input msg is described above. More details are described below:</p>
+        <li><b><i>Number</i></b> - if number is in interval <0;10> -> retuns this number. If number < 0 then output value is 0. If number > 10 then output value is 10.
+        <p></p>
+        <li><b><i>String</i></b> - general string msg returns no msg (e.g. "ahoj" retuns no msg). Special forms which can be used are:
+        <p></p>
+        <ul>
+            <li> write number (e.g. 1, 1.258, 80, -84 etc.) -> string acts like a number
+            <li> if string begins with numbers -> numbers are parsed and string act like a number (e.g. 1.258setvalue -> returns 1.258 etc.)
+        </ul>
+    </ul>
+    <p>Details for field <u>circuits</u> - text input :</p>
+    <ul>
+        <li> input text should be the same as in EVOK. One can just copy the circuit (e.g. 1.01, UART 1 2.01 etc.) and paste. This option is described above.
+        <li> another option is to copy the circuit from the <code>msg</code> (msg from relevant Websocket). Circuit here is in the form 1_01 for <i>1.01</i>; UART_1_1_01 for <i>UART 1 1.01</i> etc.
+        <li> both options are possible to write in the circuit field. Equivalent entries e.g. 2.01 or 2_01; UART 2 2.08 or UART_2_2_08 etc.
+    </ul>
+
+            
+</script>

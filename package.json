@@ -1,0 +1,13 @@
+{
+  "name": "node-red-contrib-unipi",
+  "version": "1.0.0",
+  "description": "Unipi",
+  "author": "JoTio tech s.r.o.",
+  "license": "JoTio tech s.r.o.",
+  "node-red" : {
+        "nodes": {
+            "unipi-input": "lib/unipi-input.js",
+            "unipi-output": "lib/unipi-output.js"
+        }
+    }
+}
