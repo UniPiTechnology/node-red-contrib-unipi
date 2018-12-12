@@ -13,12 +13,12 @@ The Node-RED-Dashboard requires <a href="https://nodered.org">Node-RED</a> to be
 
 To install the UniPi nodes use the `Menu - Manage palette` option and search for `node-red-contrib-unipi`, or run the following command in your Node-RED user directory (typically `~/.node-red`):
 
-    npm install node-red-contrib-unipi
+    npm install @unipitechnology/node-red-contrib-unipi
 
 ## Usage
 
 #### Basic information
-Once one installed `node-red-contrib-unipi` into Node-RED there are two nodes for use.
+Once one installed `@unipitechnology/node-red-contrib-unipi` into Node-RED there are two nodes for use.
 
    - **UniPi input** node - primary a filter for UniPi data which are get from the relevant websocket. Helps to easily access the needed data and work with them throw the flow/s.
    - **UniPi output** node - primary helps to see the ***all*** data by the request, ***filter*** the choosen data or to ***set*** the features *relay*, *digital output* and *led* -> to switch ON/OFF or set *analog output* to desired value. 
